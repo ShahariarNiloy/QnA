@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active " id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-home" aria-selected="true">Profile</a><hr>
+                <a class="nav-link" id="v-pills-questions-tab" data-toggle="pill" href="#v-pills-questions" role="tab" aria-controls="v-pills-questions" aria-selected="false">Questions</a><hr>
+                <a class="nav-link " id="v-pills-answers-tab" data-toggle="pill" href="#v-pills-answers" role="tab" aria-controls="v-pills-answers" aria-selected="false">Answers</a><hr>
+                <a class="nav-link " id="v-pills-comments-tab" data-toggle="pill" href="#v-pills-comments" role="tab" aria-controls="v-pills-comments" aria-selected="false">Comments</a><hr>
+                <a class="nav-link " id="v-pills-upvotes-tab" data-toggle="pill" href="#v-pills-upvotes" role="tab" aria-controls="v-pills-upvotes" aria-selected="false">UpVotes</a><hr>
+                <a class="nav-link " id="v-pills-downvotes-tab" data-toggle="pill" href="#v-pills-downvotes" role="tab" aria-controls="v-pills-downvotes" aria-selected="false">DownVotes</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- Profile -->
+                    <div class="tab-pane fade show active "  id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                        <div class="card card text-white mb-0 bg-secondary" allign='center' style="align-items: center;">
+                            <div class="card bg-secondary" style="width: 18rem; align-items: center; ">
+                                <img class="card-img-top" src="{{request.user.userprofile.profile_pic.url}}" alt="Card image cap">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{request.user.userprofile.name}}</h5>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text col-2"><i class="fas fa-user"></i></span>
+                                        
+                                        <li class="list-group-item col">{{request.user.userprofile.name}}</li>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text col-2"><i class="fas fa-address-card"></i></span>
+                                        <li class="list-group-item col">{{request.user.userprofile.address}}</li>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text col-2"><i class="fas fa-mobile-alt"></i></span>
+                                        <li class="list-group-item col">{{request.user.userprofile.phone}}</li>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text col-2"><i class="fas fa-envelope-open"></i></span>
+                                        <li class="list-group-item col">{{request.user.userprofile.email}}</li>
+                                    </div>
+                                  
+                                </ul>
+                              </div>
+                              <h5 class="card-footer m-lg-auto bg-light"> <a href="/profile/">Edit Profile</a> </h5>
+                        </div>
+                    </div>
+                
+                <!-- Questions -->
+                <div class="tab-pane fade" id="v-pills-questions" role="tabpanel" aria-labelledby="v-pills-questions-tab">
+                    <div class="card">
+                        <h5 class="card-header">My Questions <span class="badge badge-info">{{quests.count}}</span></h5>
+                        <div class="card-body">
+                            {% for quest in quests %}
+                            <p><a href="/detail/{{quest.id}}">{{quest.q_title}}</a></p>
+                            <hr />
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Answers -->
+                <div class="tab-pane fade" id="v-pills-answers" role="tabpanel" aria-labelledby="v-pills-answers-tab">
+                    <div class="card">
+                        <h5 class="card-header">My Answers <span class="badge badge-info">{{answers.count}}</span></h5>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Question</th>
+                                    <th>Answer</th>
+                                </tr>
+                                {% for ans in answers %}
+                                <tr>
+                                    <td><a href="/detail/{{ans.question.id}}">{{ans.question.q_title}}</a></td>
+                                    <td><a href="/detail/{{ans.question.id}}">{{ans.detail}}</a></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-comments" role="tabpanel" aria-labelledby="v-pills-comments-tab">
+                    <div class="card">
+                        <h5 class="card-header">My Comments <span class="badge badge-info">{{comments.count}}</span></h5>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Question</th>
+                                    <th>Answer</th>
+                                    <th>Comment</th>
+                                </tr>
+                                {% for comment in comments %}
+                                <tr>
+                                    <td><a href="/detail/{{comment.answer.question.id}}">{{comment.answer.question.q_title}}</a></td>
+                                    <td><a href="/detail/{{comment.answer.questionans.question.id}}">{{comment.answer.detail}}</a></td>
+                                    <td><a href="/detail/{{comment.answer.question.id}}">{{comment.comment}}</a></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-upvotes" role="tabpanel" aria-labelledby="v-pills-upvotes-tab">
+                    <div class="card">
+                        <h5 class="card-header">My Upvotes <span class="badge badge-info">{{upvotes.count}}</span></h5>
+                        <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                        </tr>
+                        {% for upvote in upvotes %}
+                        <tr>
+                            <td><a href="/detail/{{upvote.answer.question.id}}">{{upvote.answer.question.q_title}}</a></td>
+                            <td><a href="/detail/{{upvote.answer.question.id}}">{{upvote.answer.detail}}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-downvotes" role="tabpanel" aria-labelledby="v-pills-downvotes-tab">
+                    <div class="card">
+                        <h5 class="card-header">My Downvotes <span class="badge badge-info">{{downvotes.count}}</span></h5>
+                        <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                        </tr>
+                        {% for downvote in downvotes %}
+                        <tr>
+                            <td><a href="/detail/{{downvote.answer.question.id}}">{{downvote.answer.question.q_title}}</a></td>
+                            <td><a href="/detail/{{downvote.answer.question.id}}">{{downvote.answer.detail}}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

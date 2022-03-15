@@ -1,0 +1,294 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q&A</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <script src="{% static 'jquery-3.6.0.min.js' %}"></script>
+  <link rel="stylesheet" href="% static '/animatecss/animate.min.css' %">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <script src="{% static 'bootstrap.min.js' %}"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+</head>
+<style>
+  body,
+		html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			background: #E5E7E9 !important;
+		}
+  a:link {
+    color: #0c1b2a;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  a:visited {
+    color: #0c1b2a ;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  a:hover {
+    color: #1A5276;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  .pagination > li > a
+{
+    background-color: white;
+    color: #5A4181;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: #343536 !Important;
+    border: solid 1px #343536 !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: #343536 !Important;
+    border: solid 1px #343536;
+}
+.input-group:hover input{
+  color: rgba(255, 255, 255, 1);
+  box-shadow: 0px 10px 15px 10px rgba(30, 27, 32, 0.4);
+}
+
+.rounded {
+    border-radius: .25rem!important;
+}
+#qbox{color:black;text-align:center;border-radius: 20%!important;}
+
+.containerr{
+  background-color: gray;
+  color: #ddd;
+  padding: 5%;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  box-shadow: 0px 10px 15px 10px rgba(30, 27, 32, 0.4);
+}
+.searchBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchBox input{
+    background-color: rgb(48,168,220);
+    border: none;
+    outline: none;
+    width: 0;
+    padding: 0; 
+    opacity: 0;
+    border-radius: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    color: #fff;
+    transition: all 1s;
+}
+
+.searchBox input::placeholder {
+    color: rgba(255,255,255,.5);
+    font-weight: 400;
+}
+
+.searchBox i {
+    background-color: rgb(48,168,220);
+    width: 40px;
+    height: 40px;
+    padding: 9px 10px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all .5s;
+}
+
+.searchBox:hover input{
+    width: 240px;
+    opacity: 1;
+    padding: 10px 20px;
+    color: black;
+}
+
+.searchBox:hover i{
+    color: black;
+}
+.FixedHeightContainer
+{
+  height: 250px;
+  width:250px; 
+  padding:3px; 
+    background:#f00;
+}
+.Content
+{
+  height:224px;
+   overflow:auto;
+    background:#fff;
+}
+#outerDivWrapper, #outerDiv {
+   height: 100%;
+   margin: 0em;
+}
+
+#scrollableContent {
+   height: 100%;
+   margin: 0em;
+   overflow-y: auto;
+}
+</style>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/"><img src="https://images.vexels.com/media/users/3/152347/isolated/preview/27304b9b14ce9bd8a28ca637ed92070e-blue-circle-question-mark-icon-by-vexels.png" alt="" width="35" height="30" class="d-inline-block align-text-top">
+        Q&A</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav" >
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'ask-question' %}">Ask</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">Tags</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/profileinfo/">{{request.user}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div> 
+  </nav>
+<!-- Search bar -->
+  <div class="container py-5">  
+      <div class="row">
+        <div class="col-md-8 offset-2">
+          <form>
+            <div class="input-group">
+              <input type="text" name="q" class="form-control form-control-lg" style{color:blue;} placeholder="Search" />
+            <button class="btn btn-dark btn-lg" type="submit" id="button-addon2">Search</button>
+          </div>
+        </form>
+        </div>
+      </div>  
+  </div>
+  
+<!-- Question bar -->
+  <div class="container" id="qbox"  >
+    {% for quest in quests %}
+    <div class="card mb-5 shadow-lg p-3 mb-5 bg-white ">
+      <div class="card-body">
+        <div class="card-header">
+          <h3 class="card-title"><a href="/detail/{{quest.id}}"><b>{{quest.q_title}}</b></a></h3>
+        </div>
+        
+        <p class="card-text">{{quest.detail}}</p>
+        <p>
+           <span class="badge badge-secondary"><i class="fas fa-user ml-1"></i>&nbsp<a href="/otheruser/{{quest.user.username}}" class="mr-2 text-light"> {{quest.user.username}}</a></span> 
+            
+           &nbsp
+            <span class="mr-2 badge badge-success answer-click">{{quest.answer_set.count}} Answers</span>
+            <span class="mr-2 badge badge-warning">{{quest.total_comments}} Comments</span>
+        </p>
+      </div>
+      <div class="card-footer">
+        <small>{{quest.add_time|naturaltime}}</small>
+    </div>
+    </div>
+    {% endfor %}
+  </div>
+  <!-- paginitor -->
+  <nav aria-label="Page navigation example" >
+    <ul class="pagination justify-content-center">
+      {% if quests.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{quests.previous_page_number}}">Previous</a>
+      </li>
+      {% endif %}
+      {% for i in quests.paginator.page_range %}
+        {% if quests.number == i %}
+          <li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if quests.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{quests.next_page_number}}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <!-- Quote API -->
+  <div class="containerr">
+    <div class="quote-box">
+      <h2 id="quote">"Quote goes here..."</h2>
+      <small id="author">- Author</small>
+    </div>
+    <br>
+    <button id="btn" class="btn btn-dark"style="background: #2f3542;color: cornsilk;padding: 10px; border-radius: 7px!important;">New Quote</button>
+  </div>
+  <!-- Footer -->
+  <footer>
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        <span class="badge badge-dark ">© 2021 Thank You {{request.user.username}}  For Visiting Us..</span>
+    </div>
+  </footer>
+</body>
+<script>
+  const api = "https://api.quotable.io/random";
+
+const quote = document.getElementById("quote");
+const author = document.getElementById("author");
+const btn = document.getElementById("btn");
+
+btn.addEventListener("click", getQuote);
+
+function getQuote() {
+  fetch(api)
+    .then((res) => res.json())
+    .then((data) => {
+      quote.innerHTML = `"${data.content}"`;
+      author.innerHTML = `- ${data.author}`;
+    });
+}
+</script>
+</html>
+

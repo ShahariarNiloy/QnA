@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}{{quest.q_title}}{% endblock %}
+{% block content %}
+<!-- Question view -->
+  <div class="container-md">
+    <h2 class="card-header my-top"><b>{{quest.q_title}}</b></h2>
+    <p class="mt-1 p-2">{{quest.detail}}</p>
+    <p>
+        <span class="me-4"></span>
+        <span class="badge badge-secondary"><i class="fas fa-user ml-1"></i>&nbsp<a href="/otheruser/{{quest.user.username}}" class="mr-2 text-light"> {{quest.user.username}}</a></span>
+        <span class="mr-2 badge badge-success">{{quest.answer_set.count}} Answers</span>
+        
+        
+        
+    </p>
+    <p>
+        Tags:
+            {% for tag in tags %}
+            <a href="/tag/{{tag|slugify}}"><span class="badge badge-secondary">{{tag}}</span></a>
+            {% endfor %}
+    </p>
+    <p class="card-footer"><span class="me-4">{{quest.add_time|naturaltime}}</span></p>
+    <hr>
+
+
+    <!-- Adding Answer to the question -->
+    <div>
+        <button type="button" class="btn btn-dark" onclick="show()">Add Answer</button>
+    </div>
+    <div class="card my-3 col-12 p-0 " id="answ" style="display: none; background-color: transparent; border: black ;" >
+        <form method="post" name="ansquesform">
+            <div class="form-group">
+                {% csrf_token %}
+                <table class="table table-bordered">
+                    {{answerform.as_table}}
+                    <tr >
+                        <td colspan="2">
+                            <input type="submit" style="margin-left: 50%" class="btn btn-dark mb-lg-auto " onclick="submitformans()" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+        </form>
+    </div>
+    
+    {% for answer in answers %}
+    <div class="row">
+        <!-- Upvote and downvote -->
+        <div class="col-1" >
+            <div class="upvote mt-4" style="margin-left: 50%">
+                <strong class="upvote-count-{{answer.id}}">&nbsp&nbsp{{answer.upvote_set.count}}</strong><br>
+                <span class="text-dark">
+                    <i  class="fa fa-chevron-up fa-2x  upvote-click" data-answer="{{answer.id}}"></i>
+                </span>
+            </div>
+            <div class="downvote mt-3" style="margin-left: 50%">
+                <span class="text-dark">
+                    <i class="fa fa-chevron-down fa-2x downvote-click" data-answer="{{answer.id}}"></i>
+                </span><br>
+                <strong class="downvote-count-{{answer.id}}">&nbsp&nbsp{{answer.downvote_set.count}}</strong>
+            </div>
+        </div>
+        <!-- Answer showing -->
+        <div class="col-11">
+            <div class="card my-3 pb-0">
+                <h6 class="card-header">Answer</h6>
+                <div class="card-body pb-0">
+                    <div class="card-body py-1 border-dark">
+                        <p>
+                            {{ answer.detail }}
+                        </p>
+                        <p>
+            
+                            <span class="badge badge-secondary"><i class="fas fa-user ml-1"></i>&nbsp<a href="/otheruser/{{answer.user.username}}" class="mr-2 text-light"> {{answer.user.username}}</a></span>
+                
+                            
+                        </p>
+                    </div>
+                    
+                    <p class="card-footer pb-0"><span>{{answer.add_time|naturaltime}}</span></p>
+                </div>
+                
+            </div>
+            <!-- Comment showing -->
+            <div class="row">
+                <div class="col-1">
+
+                </div>
+                <div class="col-11 pb-0">
+                    <div class="card my-3 pb-0">
+                        <div class="card-header">Comments <span class="mx-2"></span><span class="comment-count-{{answer.id}}"><span class="mr-2 badge badge-warning">{{answer.comment_set.count}} comments</span></span></div>
+                        <div class="card-body pb-0">
+                            <div class="comment-wrapper-{{answer.id}}">
+                                
+                                {% for comment in answer.comment_set.all %}
+                                <div class="card mb-2 pb-0">
+                                    <div class="card-body py-1">
+                                        <p>{{comment.comment}}</p>
+                                        <p></p><span class="badge badge-secondary"><i class="fas fa-user ml-1"></i>&nbsp<a href="/otheruser/{{comment.user.username}}" class="mr-2 text-light"> {{comment.user.username}}</a></span>
+                    
+                                        </p>
+                                        
+                                    </div>
+                                </div>
+                                <p class="card-footer p-0"><span>{{comment.add_time|naturaltime}}</span></p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+
+            </div>
+            
+            
+
+            <!-- Adding comment -->
+
+            <div class="card my-3">
+                <h6 class="card-header">Add Comment</h6>
+                <div class="card-body">
+                    <textarea class="form-control comment-text-{{answer.id}}"></textarea>
+                    <button type="button" data-answer="{{answer.id}}" class="btn btn-dark my-3 save-comment">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% csrf_token %}
+    {% endfor %}
+
+    
+    
+  </div>
+  
+  <script>
+      $(document).ready(function(){
+        $(".save-comment").on('click',function(){
+            var _answerid=$(this).data('answer');
+            var _comment=$(".comment-text-"+_answerid).val();
+            $.ajax({
+                url:"/save-comment",
+                type:"post",
+                data:{
+                    comment:_comment,
+                    answerid:_answerid,
+                    csrfmiddlewaretoken:"{{csrf_token}}"
+                },
+                dataType:'json',
+                beforeSend:function(){
+                    $(".save-comment").addClass('disabled').text('saving...');
+                },
+                success:function(res){
+                    if(res.bool==true){
+                        $(".comment-text-"+_answerid).val('');
+                        var _html= '<div class="card mb-2 animate__animated animate__bounce">\
+                                     <div class="card-body">\
+                                     <p>'+_comment+'</p>\
+                                     <p><a href="#">{{request.user}}</a></p>\
+                                     </div>\
+                                    </div>';
+                    $(".comment-wrapper-"+_answerid).append(_html);
+                    var prevCount=$(".comment-count-"+_answerid).text();
+                    $(".comment-count-"+_answerid).text(parseInt(prevCount)+1);
+                    }
+                    $(".save-comment").removeClass('disabled').text('Submit');
+                }
+            });
+        });
+
+        $(".upvote-click").on('click',function(){
+            var _answerid=$(this).data('answer');
+            $.ajax({
+                url:"/save-upvote",
+                type:"post",
+                data:{
+                    answerid:_answerid,
+                    csrfmiddlewaretoken:"{{csrf_token}}"
+                },
+                dataType:'json',
+                success:function(res){
+                    var _prevupvote=$(".upvote-count-"+_answerid).text();
+                    if(res.bool==true){
+                        $(".upvote-count-"+_answerid).text(parseInt(_prevupvote)+1);
+                    }
+                }
+            });
+        });
+
+        $(".downvote-click").on('click',function(){
+            var _answerid=$(this).data('answer');
+            $.ajax({
+                url:"/save-downvote",
+                type:"post",
+                data:{
+                    answerid:_answerid,
+                    csrfmiddlewaretoken:"{{csrf_token}}"
+                },
+                dataType:'json',
+                success:function(res){
+                    var _prevupvote=$(".downvote-count-"+_answerid).text();
+                    if(res.bool==true){
+                        $(".downvote-count-"+_answerid).text(parseInt(_prevupvote)+1);
+                    }
+                }
+            });
+        });
+    });
+    var ans =1;
+    function show(){
+        if(ans==1)
+        {
+            document.getElementById("answ").style.display="inline";
+            return ans=0;
+        }
+        else{
+            document.getElementById("answ").style.display="none";
+            return ans=1;
+        }
+    }
+    
+    function submitformans(){
+        var frm = document.getElementsByName('ansquesform')[0];
+        frm.submit();
+        frm.reset();
+        return false;
+    }
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+  </script>
+{% endblock %}
+

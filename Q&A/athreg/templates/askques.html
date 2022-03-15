@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Ask Question{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="card mt-5">
+        <h5 class="card-header">Ask Question</h5>
+        <div class="card-body">
+            <form method="post" name="askquesform">
+                <div class="form-group">
+                    {% csrf_token %}
+                    <table class="table table-bordered">
+                    {{form.as_table}}
+                    <tr>
+                        <td colspan="2">
+                            <button class="btn btn-dark " onclick="submitform()">Submit</button>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function submitform(){
+        var frm = document.getElementsByName('askquesform')[0];
+        frm.submit();
+        frm.reset();
+        return false;
+    }
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+{% endblock %}

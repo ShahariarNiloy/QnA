@@ -1,0 +1,51 @@
+
+
+
+
+{% extends 'base.html' %}
+{% block title %}User's Profile{% endblock %}
+{% block content %}
+
+{% for aaa in otheruser %}
+<div class="row">
+    <div class="col-2">
+
+    </div>
+    <div class="col-8">
+        <div class="card bg-secondary text-white mb-0" allign='center' style="align-items: center;">
+            <div class="card" style="width: 18rem; align-items: center; ">
+                <img class="card-img-top" src="{{aaa.profile_pic.url}}" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title"></h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <div class="input-group-append">
+                        <span class="input-group-text col-3"><i class="fas fa-user"></i></span>
+                        
+                        <li class="list-group-item col">{{aaa.name}}</li>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text col-3"><i class="fas fa-address-card"></i></span>
+                        <li class="list-group-item col">{{aaa.address}}</li>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text col-3"><i class="fas fa-mobile-alt"></i></span>
+                        <li class="list-group-item col">{{aaa.phone}}</li>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text col-3"><i class="fas fa-envelope-open"></i></span>
+                        <li class="list-group-item col">{{aaa.email}}</li>
+                    </div>
+                  
+                </ul>
+              </div>
+        </div>
+    </div>
+    <div class="col-2">
+
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
